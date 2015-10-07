@@ -17,7 +17,7 @@ def create_dfs(m):
             if len(all_neighbors) != 1:
                 to_visit.append(current_cell)
             to_visit.append(neighbor)
-        m.refresh_maze_view()
+        # m.refresh_maze_view()
     m.state = "solve"
 
 
