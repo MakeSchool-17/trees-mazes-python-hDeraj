@@ -105,13 +105,22 @@ class Maze:
     # Visit cell in BFS search
     # Update backtrack bits for use in reconstruct_solution
     def bfs_visit_cell(self, cell, from_compass_index):
-        # TODO: Logic for updating cell bits
+        self.maze_array[cell] |= OPPOSITE_WALLS[from_compass_index] << 12
         self.draw_bfs_visited_cell(cell)
 
     # Reconstruct path to start using backtrack bits
     def reconstruct_solution(self, cell):
         self.draw_visited_cell(cell)
-        # TODO: Logic for reconstructing solution path in BFS
+        from_compass_index = self.maze_array[cell] >> 12
+        index = WALLS.index(from_compass_index)
+        x, y = self.x_y(cell)
+        x2, y2 = (x + COMPASS[index][0], y + COMPASS[index][1])
+        new_index = self.cell_index(x2, y2)
+        self.maze_array[new_index] &= ~SOLUTION_BITS
+        self.maze_array[new_index] |= WALLS[index] << 8
+        self.refresh_maze_view()
+        if x2 != 0 or y2 != 0:
+            self.reconstruct_solution(new_index)
 
     # Check if x, y values of cell are within bounds of maze
     def cell_in_bounds(self, x, y):

@@ -29,8 +29,24 @@ def solve_dfs(m):
 
 # Solve maze using BFS algorithm, terminate with solution
 def solve_bfs(m):
-    # TODO: Implement solve_bfs
-    pass
+    start_cell = 0
+    to_visit = [(start_cell, 0)]
+    while len(to_visit):
+        current_cell, direction = to_visit.pop(0)
+        m.bfs_visit_cell(current_cell, direction)
+
+        x, y = m.x_y(current_cell)
+        if x == m.w_cells - 1 and y == m.h_cells - 1:
+            m.reconstruct_solution(current_cell)
+            break
+
+        all_neighbors = m.cell_neighbors(current_cell)
+        for i in all_neighbors:
+            neighbor, direction = i
+            to_visit.append((neighbor, direction))
+        m.refresh_maze_view()
+
+    m.state = "idle"
 
 
 def print_solution_array(m):
