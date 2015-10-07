@@ -62,16 +62,20 @@ class Maze:
             not_visited = []
             for index, offset in enumerate(COMPASS):
                 x2, y2 = (x + offset[0], y + offset[1])
+                if x2 < 0 or y2 < 0:
+                    continue
+                if x2 >= self.w_cells or y2 >= self.h_cells:
+                    continue
                 new_cell = self.cell_index(x2, y2)
-                if self.cells[new_cell] & WALL_BITS == 0:
+                if self.maze_array[new_cell] & WALL_BITS == 0:
                     not_visited.append((new_cell, index))
             return not_visited
 
     # Connect two cells by knocking down the wall between them
     # Update wall bits of from_cell and to_cell
     def connect_cells(self, from_cell, to_cell, compass_index):
-        self.cells[from_cell] |= WALLS[compass_index]
-        self.cells[to_cell] |= OPPOSITE_WALLS[compass_index]
+        self.maze_array[from_cell] |= WALLS[compass_index]
+        self.maze_array[to_cell] |= OPPOSITE_WALLS[compass_index]
         self.draw_connect_cells(from_cell, compass_index)
 
     # Visit a cell along a possible solution path
